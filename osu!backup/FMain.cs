@@ -69,7 +69,7 @@ namespace osu_backup
                         case BackupPart.Beatmaps:
                             string beatmapsIn = osuPath + "\\Songs";
                             string beatmapsOut = backupPath + "\\beatmaps.json";
-                            File.WriteAllText(beatmapsIn, JsonSerializer.Serialize(RetrieveBeatmaps(beatmapsOut)));
+                            File.WriteAllText(beatmapsOut, JsonSerializer.Serialize(RetrieveBeatmaps(beatmapsIn)));
                             break;
                         case BackupPart.Replays:
                             string replaysIn = osuPath + "\\Replays";
@@ -181,11 +181,6 @@ namespace osu_backup
             }
         }
 
-        private void TPImport_DragDrop(object sender, EventArgs e)
-        {
-
-        }
-
         private void BChoose_Click(object sender, EventArgs e)
         {
             if (OFDChoose.ShowDialog() == DialogResult.OK)
@@ -214,11 +209,11 @@ namespace osu_backup
                 Directory.CreateDirectory(cloudPath);
             }
             string importPath = cloudPath + "\\temp";
-            if (!Directory.Exists(importPath))
+            if (Directory.Exists(importPath))
             {
                 Directory.Delete(importPath, true);
-                Directory.CreateDirectory(importPath);
             }
+            Directory.CreateDirectory(importPath);
 
             ActiveForm.Cursor = Cursors.WaitCursor;
             TCMain.Enabled = false;
@@ -231,13 +226,13 @@ namespace osu_backup
                     MessageBox.Show("The specified backup file is invalid.");
                     return;
                 }
-                var info = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(infoFile));
+                var info = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(infoFile));
                 if (info == null)
                 {
                     MessageBox.Show("The specified backup file is invalid.");
                     return;
                 }
-                var contains = JsonSerializer.Deserialize<List<string>>(info["contains"]);
+                var contains = JsonSerializer.Deserialize<List<string>>((string)info["contains"]);
                 if (contains == null)
                 {
                     MessageBox.Show("The specified backup file is invalid.");
@@ -248,8 +243,7 @@ namespace osu_backup
 
                 foreach (var item in contains)
                 {
-                    BackupPart part;
-                    if (!Enum.TryParse(item, out part))
+                    if (!Enum.TryParse(item, out BackupPart part))
                     {
                         continue;
                     }
@@ -261,43 +255,52 @@ namespace osu_backup
                             beatmaps = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(beatmapsIn));
                             break;
                         case BackupPart.Replays:
-                            string replays = osuPath + "\\Replays";
-                            string replayTarget = backupPath + "\\replays.zip";
-                            ZipFile.CreateFromDirectory(replays, replayTarget, CompressionLevel.SmallestSize, false);
+                            string replaysIn = importPath + "\\replays.zip";
+                            string replaysOut = importPath + "\\Replays";
+                            ZipFile.ExtractToDirectory(replaysIn, replaysOut);
                             break;
                         case BackupPart.Screenshots:
-                            string screenshots = osuPath + "\\Screenshots";
-                            string screenshotTarget = backupPath + "\\screenshots.zip";
-                            ZipFile.CreateFromDirectory(screenshots, screenshotTarget, CompressionLevel.SmallestSize, false);
+                            string screenshotsIn = importPath + "\\screenshots.zip";
+                            string screenshotsOut = importPath + "\\Screenshots";
+                            ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut);
                             break;
                         case BackupPart.Skins:
-                            string skins = osuPath + "\\Skins";
-                            string skinTarget = backupPath + "\\skins.zip";
-                            ZipFile.CreateFromDirectory(skins, skinTarget, CompressionLevel.SmallestSize, false);
+                            string skinsIn = importPath + "\\skins.zip";
+                            string skinsOut = importPath + "\\Skins";
+                            ZipFile.ExtractToDirectory(skinsIn, skinsOut);
                             break;
                     }
-                    string? name = Enum.GetName(typeof(BackupPart), part);
-                    if (name != null)
-                    {
-                        parts.Add(name);
-                    }
                 }
-                var info = new Dictionary<string, object>
-                {
-                    ["backupper_version"] = Program.Version,
-                    ["contains"] = parts
-                };
-                File.WriteAllText(backupPath + "\\backup-info.json", JsonSerializer.Serialize(info));
-                ZipFile.CreateFromDirectory(backupPath, backupDestination, CompressionLevel.Fastest, false);
-                Directory.Delete(backupPath, true);
             });
             TCMain.Enabled = true;
             Cursor = Cursors.Default;
             SystemSounds.Exclamation.Play();
-            MessageBox.Show("The backup has been created successfully.\n" +
-                "File size: " + FileSize(new FileInfo(backupDestination)) + "\n" +
-                "Location: " + backupDestination,
-                "Your backup is ready");
+            MessageBox.Show("The backup has been imported successfully.",
+                "Your import has finished");
+        }
+
+        private void TPImport_DragEnter(object sender, DragEventArgs e)
+        {
+            var data = e.Data;
+            if (data == null) {
+                return;
+            }
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Link;
+            }
+        }
+
+        private void TPImport_DragDrop(object sender, DragEventArgs e)
+        {
+            var data = e.Data;
+            if (data == null)
+            {
+                return;
+            }
+            var args = (string[])data.GetData(DataFormats.FileDrop);
+            importFile = args[0];
+            MessageBox.Show("The backup file has been set to " + importFile);
         }
     }
 }

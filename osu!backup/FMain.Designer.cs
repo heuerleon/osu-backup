@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.TPImport = new System.Windows.Forms.TabPage();
+            this.BImport = new System.Windows.Forms.Button();
+            this.LAnalysis = new System.Windows.Forms.Label();
             this.LDragDrop = new System.Windows.Forms.Label();
             this.BChoose = new System.Windows.Forms.Button();
             this.TPExport = new System.Windows.Forms.TabPage();
@@ -40,8 +42,6 @@
             this.CLBSelection = new System.Windows.Forms.CheckedListBox();
             this.TCMain = new System.Windows.Forms.TabControl();
             this.OFDChoose = new System.Windows.Forms.OpenFileDialog();
-            this.LAnalysis = new System.Windows.Forms.Label();
-            this.BImport = new System.Windows.Forms.Button();
             this.TPImport.SuspendLayout();
             this.TPExport.SuspendLayout();
             this.TCMain.SuspendLayout();
@@ -61,7 +61,30 @@
             this.TPImport.TabIndex = 1;
             this.TPImport.Text = "Import";
             this.TPImport.UseVisualStyleBackColor = true;
-            this.TPImport.DragDrop += new System.Windows.Forms.DragEventHandler(this.TPImport_DragDrop);
+            this.TPImport.DragEnter += new DragEventHandler(this.TPImport_DragEnter);
+            this.TPImport.DragDrop += new DragEventHandler(this.TPImport_DragDrop);
+            // 
+            // BImport
+            // 
+            this.BImport.AutoSize = true;
+            this.BImport.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BImport.Location = new System.Drawing.Point(6, 429);
+            this.BImport.Name = "BImport";
+            this.BImport.Size = new System.Drawing.Size(110, 30);
+            this.BImport.TabIndex = 3;
+            this.BImport.Text = "Apply backup";
+            this.BImport.UseVisualStyleBackColor = true;
+            this.BImport.Click += new System.EventHandler(this.BImport_Click);
+            // 
+            // LAnalysis
+            // 
+            this.LAnalysis.AutoSize = true;
+            this.LAnalysis.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.LAnalysis.Location = new System.Drawing.Point(6, 71);
+            this.LAnalysis.Name = "LAnalysis";
+            this.LAnalysis.Size = new System.Drawing.Size(122, 20);
+            this.LAnalysis.TabIndex = 2;
+            this.LAnalysis.Text = "Backup Analysis";
             // 
             // LDragDrop
             // 
@@ -181,28 +204,6 @@
             // OFDChoose
             // 
             this.OFDChoose.FileName = "openFileDialog1";
-            // 
-            // LAnalysis
-            // 
-            this.LAnalysis.AutoSize = true;
-            this.LAnalysis.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.LAnalysis.Location = new System.Drawing.Point(6, 71);
-            this.LAnalysis.Name = "LAnalysis";
-            this.LAnalysis.Size = new System.Drawing.Size(122, 20);
-            this.LAnalysis.TabIndex = 2;
-            this.LAnalysis.Text = "Backup Analysis";
-            // 
-            // BImport
-            // 
-            this.BImport.AutoSize = true;
-            this.BImport.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BImport.Location = new System.Drawing.Point(6, 429);
-            this.BImport.Name = "BImport";
-            this.BImport.Size = new System.Drawing.Size(110, 30);
-            this.BImport.TabIndex = 3;
-            this.BImport.Text = "Apply backup";
-            this.BImport.UseVisualStyleBackColor = true;
-            this.BImport.Click += new System.EventHandler(this.BImport_Click);
             // 
             // FMain
             // 
