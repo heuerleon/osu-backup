@@ -1,7 +1,6 @@
 using System.IO.Compression;
 using System.Text.Json;
 using System.Media;
-using System.Runtime.InteropServices;
 
 namespace osu_backup
 {
@@ -30,85 +29,21 @@ namespace osu_backup
             }
         }
 
-        private async void BExport_Click(object sender, EventArgs e)
+        private void BExport_Click(object sender, EventArgs e)
         {
-            string osuPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!";
-            if (!Directory.Exists(osuPath))
-            {
-                MessageBox.Show("osu! installation could not be located. Make sure you have installed osu! correctly.");
-                return;
-            }
 
-            string cloudPath = osuPath + "\\.cloud";
-            if (!Directory.Exists(cloudPath))
+            var parts = new List<BackupPart>();
+            foreach (var index in CLBSelection.CheckedIndices)
             {
-                Directory.CreateDirectory(cloudPath);
-            }
-            string backupPath = cloudPath + "\\latest-backup";
-            if (!Directory.Exists(backupPath))
-            {
-                Directory.CreateDirectory(backupPath);
-            }
-            var now = DateTime.Now;
-            string backupDestination = cloudPath + "\\" + now.ToString("yyyy-MM-dd") + "T" + now.ToString("HH-mm-ss") + "_backup.osb";
-
-            ActiveForm.Cursor = Cursors.WaitCursor;
-            TCMain.Enabled = false;
-            await Task.Run(() =>
-            {
-                var parts = new List<string>();
-                foreach(var index in CLBSelection.CheckedIndices)
+                if (!Enum.IsDefined(typeof(BackupPart), index))
                 {
-                    if (!Enum.IsDefined(typeof(BackupPart), index))
-                    {
-                        continue;
-                    }
-                    var part = (BackupPart)index;
-                    switch(part)
-                    {
-                        case BackupPart.Beatmaps:
-                            string beatmapsIn = osuPath + "\\Songs";
-                            string beatmapsOut = backupPath + "\\beatmaps.json";
-                            File.WriteAllText(beatmapsOut, JsonSerializer.Serialize(FileUtils.RetrieveBeatmaps(beatmapsIn)));
-                            break;
-                        case BackupPart.Replays:
-                            string replaysIn = osuPath + "\\Replays";
-                            string replaysOut = backupPath + "\\replays.zip";
-                            ZipFile.CreateFromDirectory(replaysIn, replaysOut, CompressionLevel.SmallestSize, false);
-                            break;
-                        case BackupPart.Screenshots:
-                            string screenshotsIn = osuPath + "\\Screenshots";
-                            string screenshotsOut = backupPath + "\\screenshots.zip";
-                            ZipFile.CreateFromDirectory(screenshotsIn, screenshotsOut, CompressionLevel.SmallestSize, false);
-                            break;
-                        case BackupPart.Skins:
-                            string skinsIn = osuPath + "\\Skins";
-                            string skinsOut = backupPath + "\\skins.zip";
-                            ZipFile.CreateFromDirectory(skinsIn, skinsOut, CompressionLevel.SmallestSize, false);
-                            break;
-                    }
-                    string? name = Enum.GetName(typeof(BackupPart), part);
-                    if (name != null)
-                    {
-                        parts.Add(name);
-                    }
+                    continue;
                 }
-                var info = new Dictionary<string, object>
-                {
-                    ["backupper_version"] = Program.Version,
-                    ["contains"] = parts
-                };
-                File.WriteAllText(backupPath + "\\backup-info.json", JsonSerializer.Serialize(info));
-                ZipFile.CreateFromDirectory(backupPath, backupDestination, CompressionLevel.Fastest, false);
-                Directory.Delete(backupPath, true);
-            });
-            TCMain.Enabled = true;
-            Cursor = Cursors.Default;
-            SystemSounds.Exclamation.Play();
-            MessageBox.Show("The backup has been created successfully.\n" +
-                "File size: " + FileUtils.FileSize(new FileInfo(backupDestination)) + "\n" +
-                "Location: " + backupDestination,
-                "Your backup is ready");
+                var part = (BackupPart)index;
+                parts.Add(part);
+            }
+            var exportForm = new FExport(parts);
+            exportForm.ShowDialog();
         }
 
         private void FMain_Load(object sender, EventArgs e)
@@ -181,8 +116,6 @@ namespace osu_backup
                     return;
                 }
 
-                Dictionary<string, string>? beatmaps = null;
-
                 foreach (var item in contains)
                 {
                     if (!Enum.TryParse(item, out BackupPart part))
@@ -192,28 +125,27 @@ namespace osu_backup
                     switch (part)
                     {
                         case BackupPart.Beatmaps:
-                            string beatmapsIn = importPath + "\\beatmaps.json";
-                            string beatmapsOut = importPath + "\\Songs";
-                            beatmaps = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(beatmapsIn));
-                            // TODO: download beatmaps
+                            string beatmapsIn = importPath + "\\Songs";
+                            string beatmapsOut = osuPath + "\\Songs";
+                            //ZipFile.ExtractToDirectory(beatmapsIn, beatmapsOut, true);
                             break;
                         case BackupPart.Replays:
-                            string replaysIn = importPath + "\\replays.zip";
-                            string replaysOut = importPath + "\\Replays";
-                            ZipFile.ExtractToDirectory(replaysIn, replaysOut);
-                            FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
+                            string replaysIn = importPath + "\\Replays";
+                            string replaysOut = osuPath + "\\Replays";
+                            //ZipFile.ExtractToDirectory(replaysIn, replaysOut, true);
+                            //FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
                             break;
                         case BackupPart.Screenshots:
-                            string screenshotsIn = importPath + "\\screenshots.zip";
-                            string screenshotsOut = importPath + "\\Screenshots";
-                            ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut);
-                            FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
+                            string screenshotsIn = importPath + "\\Screenshots";
+                            string screenshotsOut = osuPath + "\\Screenshots";
+                            //ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut, true);
+                            //FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
                             break;
                         case BackupPart.Skins:
-                            string skinsIn = importPath + "\\skins.zip";
-                            string skinsOut = importPath + "\\Skins";
-                            ZipFile.ExtractToDirectory(skinsIn, skinsOut);
-                            FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
+                            string skinsIn = importPath + "\\Skins";
+                            string skinsOut = osuPath + "\\Skins";
+                            //ZipFile.ExtractToDirectory(skinsIn, skinsOut, true);
+                            //FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
                             break;
                     }
                 }

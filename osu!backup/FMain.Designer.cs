@@ -54,15 +54,15 @@
             this.TPImport.Controls.Add(this.LAnalysis);
             this.TPImport.Controls.Add(this.LDragDrop);
             this.TPImport.Controls.Add(this.BChoose);
-            this.TPImport.Location = new System.Drawing.Point(4, 29);
+            this.TPImport.Location = new System.Drawing.Point(4, 24);
             this.TPImport.Name = "TPImport";
             this.TPImport.Padding = new System.Windows.Forms.Padding(3);
-            this.TPImport.Size = new System.Drawing.Size(760, 465);
+            this.TPImport.Size = new System.Drawing.Size(760, 470);
             this.TPImport.TabIndex = 1;
             this.TPImport.Text = "Import";
             this.TPImport.UseVisualStyleBackColor = true;
-            this.TPImport.DragEnter += new DragEventHandler(this.TPImport_DragEnter);
-            this.TPImport.DragDrop += new DragEventHandler(this.TPImport_DragDrop);
+            this.TPImport.DragDrop += new System.Windows.Forms.DragEventHandler(this.TPImport_DragDrop);
+            this.TPImport.DragEnter += new System.Windows.Forms.DragEventHandler(this.TPImport_DragEnter);
             // 
             // BImport
             // 
@@ -213,7 +213,9 @@
             this.Controls.Add(this.TCMain);
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MaximizeBox = false;
             this.Name = "FMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "osu!backup";
             this.Load += new System.EventHandler(this.FMain_Load);
             this.TPImport.ResumeLayout(false);

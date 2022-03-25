@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO.Compression;
 
 namespace osu_backup
 {
@@ -24,23 +20,49 @@ namespace osu_backup
             return result;
         }
 
-        public static CopyDirectoryResult? CopyDirectory(string sourceDir, string destinationDir, bool recursive = false, bool overwrite = false)
+        public static async Task<int> CreateOsuMapFiles(string source, string destination, ProgressBar bar)
+        {
+            int mapCount = 0;
+            var dir = new DirectoryInfo(source);
+            if (!dir.Exists)
+            {
+                return -1;
+            }
+
+            if (!Directory.Exists(destination))
+            {
+                Directory.CreateDirectory(destination);
+            }
+
+            var maps = dir.GetDirectories();
+            bar.Maximum = maps.Length;
+            foreach (DirectoryInfo map in maps)
+            {
+                string targetMapFile = Path.Combine(destination, map.Name + ".osz");
+                await Task.Run(() => ZipFile.CreateFromDirectory(map.FullName, targetMapFile, CompressionLevel.SmallestSize, false));
+                mapCount++;
+                bar.PerformStep();
+            }
+            return mapCount;
+        }
+
+        public static CopyDirectoryResult? CopyDirectory(string source, string destination, bool recursive = false, bool overwrite = false)
         {
             int files = 0;
             int dirs = 0;
-            var dir = new DirectoryInfo(sourceDir);
+            var dir = new DirectoryInfo(source);
             if (!dir.Exists)
             {
                 return null;
             }
 
-            if (!Directory.Exists(destinationDir))
+            if (!Directory.Exists(destination))
             {
-                Directory.CreateDirectory(destinationDir);
+                Directory.CreateDirectory(destination);
             }
             foreach (FileInfo file in dir.GetFiles())
             {
-                string targetFilePath = Path.Combine(destinationDir, file.Name);
+                string targetFilePath = Path.Combine(destination, file.Name);
                 if (!File.Exists(targetFilePath) || overwrite)
                 {
                     file.CopyTo(targetFilePath);
@@ -53,7 +75,7 @@ namespace osu_backup
             {
                 foreach (DirectoryInfo subDir in children)
                 {
-                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    string newDestinationDir = Path.Combine(destination, subDir.Name);
                     if (!Directory.Exists(newDestinationDir) || overwrite)
                     {
                         dirs++;
@@ -81,8 +103,8 @@ namespace osu_backup
                     unit = i;
                 }
             }
-            double newSize = Math.Floor(size / Math.Pow(1024, unit));
-            return newSize + " " + suffixes[unit];
+            double newSize = size / Math.Pow(1024, unit);
+            return string.Format("{0:0.##}", newSize) + " " + suffixes[unit];
         }
     }
 }
