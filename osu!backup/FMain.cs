@@ -69,7 +69,7 @@ namespace osu_backup
                         case BackupPart.Beatmaps:
                             string beatmapsIn = osuPath + "\\Songs";
                             string beatmapsOut = backupPath + "\\beatmaps.json";
-                            File.WriteAllText(beatmapsOut, JsonSerializer.Serialize(RetrieveBeatmaps(beatmapsIn)));
+                            File.WriteAllText(beatmapsOut, JsonSerializer.Serialize(FileUtils.RetrieveBeatmaps(beatmapsIn)));
                             break;
                         case BackupPart.Replays:
                             string replaysIn = osuPath + "\\Replays";
@@ -106,67 +106,9 @@ namespace osu_backup
             Cursor = Cursors.Default;
             SystemSounds.Exclamation.Play();
             MessageBox.Show("The backup has been created successfully.\n" +
-                "File size: " + FileSize(new FileInfo(backupDestination)) + "\n" +
+                "File size: " + FileUtils.FileSize(new FileInfo(backupDestination)) + "\n" +
                 "Location: " + backupDestination,
                 "Your backup is ready");
-        }
-
-        private Dictionary<string, string> RetrieveBeatmaps(string source)
-        {
-            var result = new Dictionary<string, string>();
-            foreach (var beatmap in Directory.GetDirectories(source))
-            {
-                var fullName = new DirectoryInfo(beatmap).Name.Split(' ');
-                string id = fullName[0];
-                if (!result.ContainsKey(id))
-                {
-                    string name = string.Join(" ", fullName[1..]);
-                    result.Add(id, name);
-                }
-            }
-            return result;
-        }
-
-        private void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
-        {
-            var dir = new DirectoryInfo(sourceDir);
-            if (!dir.Exists)
-            {
-                return;
-            }
-
-            Directory.CreateDirectory(destinationDir);
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                string targetFilePath = Path.Combine(destinationDir, file.Name);
-                file.CopyTo(targetFilePath);
-            }
-
-            DirectoryInfo[] children = dir.GetDirectories();
-            if (recursive)
-            {
-                foreach (DirectoryInfo subDir in children)
-                {
-                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-                    CopyDirectory(subDir.FullName, newDestinationDir, true);
-                }
-            }
-        }
-
-        private string FileSize(FileInfo file)
-        {
-            long size = file.Length;
-            string[] suffixes = { "bytes", "KB", "MB", "GB", "TB"};
-            int unit = 0;
-            for (int i = 0; i < suffixes.Length; i++) 
-            {
-                if (size > Math.Pow(1024, i))
-                {
-                    unit = i;
-                }
-            }
-            double newSize = Math.Floor(size / Math.Pow(1024, unit));
-            return newSize + " " + suffixes[unit];
         }
 
         private void FMain_Load(object sender, EventArgs e)
@@ -232,7 +174,7 @@ namespace osu_backup
                     MessageBox.Show("The specified backup file is invalid.");
                     return;
                 }
-                var contains = JsonSerializer.Deserialize<List<string>>((string)info["contains"]);
+                var contains = JsonSerializer.Deserialize<List<string>>((JsonElement)info["contains"]);
                 if (contains == null)
                 {
                     MessageBox.Show("The specified backup file is invalid.");
@@ -253,21 +195,25 @@ namespace osu_backup
                             string beatmapsIn = importPath + "\\beatmaps.json";
                             string beatmapsOut = importPath + "\\Songs";
                             beatmaps = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(beatmapsIn));
+                            // TODO: download beatmaps
                             break;
                         case BackupPart.Replays:
                             string replaysIn = importPath + "\\replays.zip";
                             string replaysOut = importPath + "\\Replays";
                             ZipFile.ExtractToDirectory(replaysIn, replaysOut);
+                            FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
                             break;
                         case BackupPart.Screenshots:
                             string screenshotsIn = importPath + "\\screenshots.zip";
                             string screenshotsOut = importPath + "\\Screenshots";
                             ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut);
+                            FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
                             break;
                         case BackupPart.Skins:
                             string skinsIn = importPath + "\\skins.zip";
                             string skinsOut = importPath + "\\Skins";
                             ZipFile.ExtractToDirectory(skinsIn, skinsOut);
+                            FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
                             break;
                     }
                 }
