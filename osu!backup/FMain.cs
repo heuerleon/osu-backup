@@ -180,5 +180,10 @@ namespace osu_backup
             importFile = args[0];
             MessageBox.Show("The backup file has been set to " + importFile);
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
