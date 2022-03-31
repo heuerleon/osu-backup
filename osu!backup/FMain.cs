@@ -68,9 +68,42 @@ namespace osu_backup
 
         private async void BImport_Click(object sender, EventArgs e)
         {
+        }
+
+        private void TPImport_DragEnter(object sender, DragEventArgs e)
+        {
+            var data = e.Data;
+            if (data == null) {
+                return;
+            }
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Link;
+            }
+        }
+
+        private void TPImport_DragDrop(object sender, DragEventArgs e)
+        {
+            var data = e.Data;
+            if (data == null)
+            {
+                return;
+            }
+            var args = (string[])data.GetData(DataFormats.FileDrop);
+            importFile = args[0];
+            MessageBox.Show("The backup file has been set to " + importFile);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private async void BAnalyse_Click(object sender, EventArgs e)
+        {
             if (importFile == null)
             {
-                MessageBox.Show("Backkup file not specified. You need to select one first to import the data.");
+                MessageBox.Show("Backup file not specified. You need to select one first to import the data.");
                 return;
             }
             string osuPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!";
@@ -155,35 +188,6 @@ namespace osu_backup
             SystemSounds.Exclamation.Play();
             MessageBox.Show("The backup has been imported successfully.",
                 "Your import has finished");
-        }
-
-        private void TPImport_DragEnter(object sender, DragEventArgs e)
-        {
-            var data = e.Data;
-            if (data == null) {
-                return;
-            }
-            if (data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Link;
-            }
-        }
-
-        private void TPImport_DragDrop(object sender, DragEventArgs e)
-        {
-            var data = e.Data;
-            if (data == null)
-            {
-                return;
-            }
-            var args = (string[])data.GetData(DataFormats.FileDrop);
-            importFile = args[0];
-            MessageBox.Show("The backup file has been set to " + importFile);
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }
