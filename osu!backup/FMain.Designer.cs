@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.TPImport = new System.Windows.Forms.TabPage();
+            this.BAnalyse = new System.Windows.Forms.Button();
             this.DGVAnalysis = new System.Windows.Forms.DataGridView();
+            this.CLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CBackup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BImport = new System.Windows.Forms.Button();
             this.LAnalysis = new System.Windows.Forms.Label();
             this.LDragDrop = new System.Windows.Forms.Label();
@@ -43,9 +46,6 @@
             this.CLBSelection = new System.Windows.Forms.CheckedListBox();
             this.TCMain = new System.Windows.Forms.TabControl();
             this.OFDChoose = new System.Windows.Forms.OpenFileDialog();
-            this.CLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CBackup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BAnalyse = new System.Windows.Forms.Button();
             this.TPImport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVAnalysis)).BeginInit();
             this.TPExport.SuspendLayout();
@@ -61,15 +61,27 @@
             this.TPImport.Controls.Add(this.LAnalysis);
             this.TPImport.Controls.Add(this.LDragDrop);
             this.TPImport.Controls.Add(this.BChoose);
-            this.TPImport.Location = new System.Drawing.Point(4, 29);
+            this.TPImport.Location = new System.Drawing.Point(4, 24);
             this.TPImport.Name = "TPImport";
             this.TPImport.Padding = new System.Windows.Forms.Padding(3);
-            this.TPImport.Size = new System.Drawing.Size(760, 465);
+            this.TPImport.Size = new System.Drawing.Size(760, 470);
             this.TPImport.TabIndex = 1;
             this.TPImport.Text = "Import";
             this.TPImport.UseVisualStyleBackColor = true;
             this.TPImport.DragDrop += new System.Windows.Forms.DragEventHandler(this.TPImport_DragDrop);
             this.TPImport.DragEnter += new System.Windows.Forms.DragEventHandler(this.TPImport_DragEnter);
+            // 
+            // BAnalyse
+            // 
+            this.BAnalyse.AutoSize = true;
+            this.BAnalyse.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BAnalyse.Location = new System.Drawing.Point(183, 88);
+            this.BAnalyse.Name = "BAnalyse";
+            this.BAnalyse.Size = new System.Drawing.Size(122, 30);
+            this.BAnalyse.TabIndex = 5;
+            this.BAnalyse.Text = "Analyse backup";
+            this.BAnalyse.UseVisualStyleBackColor = true;
+            this.BAnalyse.Click += new System.EventHandler(this.BAnalyse_Click);
             // 
             // DGVAnalysis
             // 
@@ -94,6 +106,26 @@
             this.DGVAnalysis.Size = new System.Drawing.Size(293, 197);
             this.DGVAnalysis.TabIndex = 4;
             this.DGVAnalysis.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // CLocal
+            // 
+            this.CLocal.Frozen = true;
+            this.CLocal.HeaderText = "Local";
+            this.CLocal.Name = "CLocal";
+            this.CLocal.ReadOnly = true;
+            this.CLocal.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CLocal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CLocal.Width = 50;
+            // 
+            // CBackup
+            // 
+            this.CBackup.Frozen = true;
+            this.CBackup.HeaderText = "Backup";
+            this.CBackup.Name = "CBackup";
+            this.CBackup.ReadOnly = true;
+            this.CBackup.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CBackup.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CBackup.Width = 63;
             // 
             // BImport
             // 
@@ -236,38 +268,6 @@
             // 
             this.OFDChoose.FileName = "openFileDialog1";
             // 
-            // CLocal
-            // 
-            this.CLocal.Frozen = true;
-            this.CLocal.HeaderText = "Local";
-            this.CLocal.Name = "CLocal";
-            this.CLocal.ReadOnly = true;
-            this.CLocal.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CLocal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CLocal.Width = 50;
-            // 
-            // CBackup
-            // 
-            this.CBackup.Frozen = true;
-            this.CBackup.HeaderText = "Backup";
-            this.CBackup.Name = "CBackup";
-            this.CBackup.ReadOnly = true;
-            this.CBackup.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CBackup.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CBackup.Width = 63;
-            // 
-            // BAnalyse
-            // 
-            this.BAnalyse.AutoSize = true;
-            this.BAnalyse.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BAnalyse.Location = new System.Drawing.Point(183, 88);
-            this.BAnalyse.Name = "BAnalyse";
-            this.BAnalyse.Size = new System.Drawing.Size(122, 30);
-            this.BAnalyse.TabIndex = 5;
-            this.BAnalyse.Text = "Analyse backup";
-            this.BAnalyse.UseVisualStyleBackColor = true;
-            this.BAnalyse.Click += new System.EventHandler(this.BAnalyse_Click);
-            // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -275,6 +275,7 @@
             this.ClientSize = new System.Drawing.Size(794, 522);
             this.Controls.Add(this.TCMain);
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "FMain";
