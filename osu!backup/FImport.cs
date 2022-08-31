@@ -7,11 +7,13 @@ namespace osu_backup
     public partial class FImport : Form
     {
         private readonly string? importFile;
+        private readonly FMain mainRef;
 
-        public FImport(string? importFile)
+        public FImport(string? importFile, FMain mainRef)
         {
             InitializeComponent();
             this.importFile = importFile;
+            this.mainRef = mainRef;
         }
 
         private async void FImport_Load(object sender, EventArgs e)
@@ -52,7 +54,7 @@ namespace osu_backup
 
             PBAll.Maximum = 5;
             PBStep.Value = 0;
-            LStep.Text = "Extracing backup file";
+            LStep.Text = "Extracting backup file";
 
             await Task.Run(() => ZipFile.ExtractToDirectory(importFile, importPath));
             string infoFile = importPath + "\\backup-info.json";
@@ -76,6 +78,7 @@ namespace osu_backup
 
             PBStep.Value = 1;
             PBAll.PerformStep();
+            Dictionary<BackupPart, List<string>> summary = new();
 
             foreach (var item in contains)
             {
@@ -86,86 +89,82 @@ namespace osu_backup
 
                 PBStep.Value = 0;
                 LStep.Text = "Importing " + Enum.GetName(typeof(BackupPart), part);
+                List<string> newAssets = new();
 
                 switch (part)
                 {
                     case BackupPart.Beatmaps:
                         PBStep.Maximum = 1;
-                        List<string> newBeatmaps = new();
                         string beatmapsIn = importPath + "\\Songs";
                         string beatmapsOut = osuPath + "\\Songs";
                         var beatmaps = new DirectoryInfo(beatmapsIn).GetFiles();
                         foreach (FileInfo beatmap in beatmaps)
                         {
-                            var oldFile = new FileInfo(beatmapsOut + beatmap.Name);
+                            var oldFile = new DirectoryInfo(beatmapsOut + "\\" + beatmap.Name[..^4]);
                             if (!oldFile.Exists)
                             {
-                                newBeatmaps.Add(beatmap.Name);
+                                newAssets.Add(beatmap.FullName);
                             }
                         }
-                        //ZipFile.ExtractToDirectory(beatmapsIn, beatmapsOut, true);
                         PBStep.Value = 1;
                         break;
                     case BackupPart.Replays:
                         PBStep.Maximum = 1;
-                        List<string> newReplays = new();
                         string replaysIn = importPath + "\\Replays";
                         string replaysOut = osuPath + "\\Replays";
                         var replays = new DirectoryInfo(replaysIn).GetFiles();
                         foreach (FileInfo replay in replays)
                         {
-                            var oldFile = new FileInfo(replaysOut + replay.Name);
+                            var oldFile = new FileInfo(replaysOut + "\\" + replay.Name);
                             if (!oldFile.Exists)
                             {
-                                newReplays.Add(replay.Name);
+                                newAssets.Add(replay.FullName);
                             }
                         }
-                        //ZipFile.ExtractToDirectory(replaysIn, replaysOut, true);
                         //FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
                         PBStep.Value = 1;
                         break;
                     case BackupPart.Screenshots:
                         PBStep.Maximum = 1;
-                        List<string> newScreenshots = new();
                         string screenshotsIn = importPath + "\\Screenshots";
                         string screenshotsOut = osuPath + "\\Screenshots";
                         var screenshots = new DirectoryInfo(screenshotsIn).GetFiles();
                         foreach (FileInfo screenshot in screenshots)
                         {
-                            var oldFile = new FileInfo(screenshotsOut + screenshot.Name);
+                            var oldFile = new FileInfo(screenshotsOut + "\\" + screenshot.Name);
                             if (!oldFile.Exists)
                             {
-                                newScreenshots.Add(screenshot.Name);
+                                newAssets.Add(screenshot.FullName);
                             }
                         }
-                        //ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut, true);
                         //FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
                         PBStep.Value = 1;
                         break;
                     case BackupPart.Skins:
                         PBStep.Maximum = 1;
-                        List<string> newSkins = new();
                         string skinsIn = importPath + "\\Skins";
                         string skinsOut = osuPath + "\\Skins";
                         var skins = new DirectoryInfo(skinsIn).GetFiles();
                         foreach (FileInfo skin in skins)
                         {
-                            var oldFile = new FileInfo(skinsOut + skin.Name);
+                            var oldFile = new FileInfo(skinsOut + "\\" + skin.Name);
                             if (!oldFile.Exists)
                             {
-                                newSkins.Add(skin.Name);
+                                newAssets.Add(skin.FullName);
                             }
                         }
-                        //ZipFile.ExtractToDirectory(skinsIn, skinsOut, true);
                         //FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
                         PBStep.Value = 1;
                         break;
                 }
+
+                summary[part] = newAssets;
             }
 
             SystemSounds.Exclamation.Play();
-            MessageBox.Show("The backup has been imported successfully.",
+            MessageBox.Show("The backup has been imported successfully. You can now view the new assets and apply them.",
                 "Your import has finished");
+            mainRef.UpdateAnalysis(summary);
             Close();
         }
     }

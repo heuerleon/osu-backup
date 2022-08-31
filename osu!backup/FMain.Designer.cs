@@ -31,8 +31,8 @@
             this.TPImport = new System.Windows.Forms.TabPage();
             this.BImport = new System.Windows.Forms.Button();
             this.DGVAnalysis = new System.Windows.Forms.DataGridView();
-            this.CLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CBackup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNew = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BApply = new System.Windows.Forms.Button();
             this.LAnalysis = new System.Windows.Forms.Label();
             this.LDragDrop = new System.Windows.Forms.Label();
@@ -90,12 +90,14 @@
             this.DGVAnalysis.AllowUserToResizeColumns = false;
             this.DGVAnalysis.AllowUserToResizeRows = false;
             this.DGVAnalysis.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.DGVAnalysis.BackgroundColor = System.Drawing.Color.White;
+            this.DGVAnalysis.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DGVAnalysis.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVAnalysis.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.CLocal,
-            this.CBackup});
+            this.CCategory,
+            this.CNew});
             this.DGVAnalysis.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.DGVAnalysis.Location = new System.Drawing.Point(12, 124);
+            this.DGVAnalysis.Location = new System.Drawing.Point(6, 133);
             this.DGVAnalysis.MultiSelect = false;
             this.DGVAnalysis.Name = "DGVAnalysis";
             this.DGVAnalysis.ReadOnly = true;
@@ -103,28 +105,28 @@
             this.DGVAnalysis.RowTemplate.Height = 25;
             this.DGVAnalysis.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DGVAnalysis.ShowEditingIcon = false;
-            this.DGVAnalysis.Size = new System.Drawing.Size(293, 197);
+            this.DGVAnalysis.Size = new System.Drawing.Size(241, 275);
             this.DGVAnalysis.TabIndex = 4;
             // 
-            // CLocal
+            // CCategory
             // 
-            this.CLocal.Frozen = true;
-            this.CLocal.HeaderText = "Local";
-            this.CLocal.Name = "CLocal";
-            this.CLocal.ReadOnly = true;
-            this.CLocal.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CLocal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CLocal.Width = 50;
+            this.CCategory.Frozen = true;
+            this.CCategory.HeaderText = "Category";
+            this.CCategory.Name = "CCategory";
+            this.CCategory.ReadOnly = true;
+            this.CCategory.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CCategory.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CCategory.Width = 75;
             // 
-            // CBackup
+            // CNew
             // 
-            this.CBackup.Frozen = true;
-            this.CBackup.HeaderText = "Backup";
-            this.CBackup.Name = "CBackup";
-            this.CBackup.ReadOnly = true;
-            this.CBackup.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CBackup.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CBackup.Width = 63;
+            this.CNew.Frozen = true;
+            this.CNew.HeaderText = "New asset count";
+            this.CNew.Name = "CNew";
+            this.CNew.ReadOnly = true;
+            this.CNew.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CNew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CNew.Width = 123;
             // 
             // BApply
             // 
@@ -308,8 +310,8 @@
         private Button BApply;
         private Label LAnalysis;
         private DataGridView DGVAnalysis;
-        private DataGridViewTextBoxColumn CLocal;
-        private DataGridViewTextBoxColumn CBackup;
         private Button BImport;
+        private DataGridViewTextBoxColumn CCategory;
+        private DataGridViewTextBoxColumn CNew;
     }
 }

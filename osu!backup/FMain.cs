@@ -7,6 +7,7 @@ namespace osu_backup
     public partial class FMain : Form
     {
         private string? importFile = null;
+        public Dictionary<BackupPart, List<string>>? importSummary;
 
         public FMain()
         {
@@ -80,7 +81,7 @@ namespace osu_backup
 
         private void BImport_Click(object sender, EventArgs e)
         {
-            var importForm = new FImport(OFDChoose.FileName);
+            var importForm = new FImport(OFDChoose.FileName, this);
             importForm.ShowDialog();
         }
 
@@ -110,7 +111,16 @@ namespace osu_backup
 
         private void BApply_Click(object sender, EventArgs e)
         {
+            // TODO
+        }
 
+        public void UpdateAnalysis(Dictionary<BackupPart, List<string>> summary)
+        {
+            importSummary = summary;
+            foreach (var part in importSummary.Keys)
+            {
+                DGVAnalysis.Rows.Add(part.ToString(), importSummary[part].Count);
+            }
         }
     }
 }
