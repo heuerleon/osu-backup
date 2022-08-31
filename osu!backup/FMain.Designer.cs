@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.TPImport = new System.Windows.Forms.TabPage();
-            this.BAnalyse = new System.Windows.Forms.Button();
+            this.BImport = new System.Windows.Forms.Button();
             this.DGVAnalysis = new System.Windows.Forms.DataGridView();
             this.CLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CBackup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BImport = new System.Windows.Forms.Button();
+            this.BApply = new System.Windows.Forms.Button();
             this.LAnalysis = new System.Windows.Forms.Label();
             this.LDragDrop = new System.Windows.Forms.Label();
             this.BChoose = new System.Windows.Forms.Button();
@@ -55,33 +55,33 @@
             // TPImport
             // 
             this.TPImport.AllowDrop = true;
-            this.TPImport.Controls.Add(this.BAnalyse);
-            this.TPImport.Controls.Add(this.DGVAnalysis);
             this.TPImport.Controls.Add(this.BImport);
+            this.TPImport.Controls.Add(this.DGVAnalysis);
+            this.TPImport.Controls.Add(this.BApply);
             this.TPImport.Controls.Add(this.LAnalysis);
             this.TPImport.Controls.Add(this.LDragDrop);
             this.TPImport.Controls.Add(this.BChoose);
-            this.TPImport.Location = new System.Drawing.Point(4, 24);
+            this.TPImport.Location = new System.Drawing.Point(4, 29);
             this.TPImport.Name = "TPImport";
             this.TPImport.Padding = new System.Windows.Forms.Padding(3);
-            this.TPImport.Size = new System.Drawing.Size(760, 470);
+            this.TPImport.Size = new System.Drawing.Size(760, 465);
             this.TPImport.TabIndex = 1;
             this.TPImport.Text = "Import";
             this.TPImport.UseVisualStyleBackColor = true;
             this.TPImport.DragDrop += new System.Windows.Forms.DragEventHandler(this.TPImport_DragDrop);
             this.TPImport.DragEnter += new System.Windows.Forms.DragEventHandler(this.TPImport_DragEnter);
             // 
-            // BAnalyse
+            // BImport
             // 
-            this.BAnalyse.AutoSize = true;
-            this.BAnalyse.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BAnalyse.Location = new System.Drawing.Point(183, 88);
-            this.BAnalyse.Name = "BAnalyse";
-            this.BAnalyse.Size = new System.Drawing.Size(122, 30);
-            this.BAnalyse.TabIndex = 5;
-            this.BAnalyse.Text = "Analyse backup";
-            this.BAnalyse.UseVisualStyleBackColor = true;
-            this.BAnalyse.Click += new System.EventHandler(this.BAnalyse_Click);
+            this.BImport.AutoSize = true;
+            this.BImport.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BImport.Location = new System.Drawing.Point(183, 88);
+            this.BImport.Name = "BImport";
+            this.BImport.Size = new System.Drawing.Size(64, 30);
+            this.BImport.TabIndex = 5;
+            this.BImport.Text = "Import";
+            this.BImport.UseVisualStyleBackColor = true;
+            this.BImport.Click += new System.EventHandler(this.BImport_Click);
             // 
             // DGVAnalysis
             // 
@@ -105,7 +105,6 @@
             this.DGVAnalysis.ShowEditingIcon = false;
             this.DGVAnalysis.Size = new System.Drawing.Size(293, 197);
             this.DGVAnalysis.TabIndex = 4;
-            this.DGVAnalysis.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // CLocal
             // 
@@ -127,17 +126,17 @@
             this.CBackup.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CBackup.Width = 63;
             // 
-            // BImport
+            // BApply
             // 
-            this.BImport.AutoSize = true;
-            this.BImport.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BImport.Location = new System.Drawing.Point(6, 429);
-            this.BImport.Name = "BImport";
-            this.BImport.Size = new System.Drawing.Size(110, 30);
-            this.BImport.TabIndex = 3;
-            this.BImport.Text = "Apply backup";
-            this.BImport.UseVisualStyleBackColor = true;
-            this.BImport.Click += new System.EventHandler(this.BImport_Click);
+            this.BApply.AutoSize = true;
+            this.BApply.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BApply.Location = new System.Drawing.Point(6, 429);
+            this.BApply.Name = "BApply";
+            this.BApply.Size = new System.Drawing.Size(110, 30);
+            this.BApply.TabIndex = 3;
+            this.BApply.Text = "Apply backup";
+            this.BApply.UseVisualStyleBackColor = true;
+            this.BApply.Click += new System.EventHandler(this.BApply_Click);
             // 
             // LAnalysis
             // 
@@ -306,11 +305,11 @@
         private TabControl TCMain;
         private OpenFileDialog OFDChoose;
         private Label LDragDrop;
-        private Button BImport;
+        private Button BApply;
         private Label LAnalysis;
         private DataGridView DGVAnalysis;
         private DataGridViewTextBoxColumn CLocal;
         private DataGridViewTextBoxColumn CBackup;
-        private Button BAnalyse;
+        private Button BImport;
     }
 }

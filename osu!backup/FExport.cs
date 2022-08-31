@@ -6,7 +6,7 @@ namespace osu_backup
 {
     public partial class FExport : Form
     {
-        private List<BackupPart> backupParts;
+        private readonly List<BackupPart> backupParts;
 
         public FExport(List<BackupPart> backupParts)
         {
@@ -24,6 +24,7 @@ namespace osu_backup
             };
             TElapsed.Enabled = true;
             TElapsed.Start();
+
             string osuPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!";
             if (!Directory.Exists(osuPath))
             {
@@ -31,7 +32,7 @@ namespace osu_backup
                 return;
             }
 
-            string cloudPath = osuPath + "\\.cloud";
+            string cloudPath = osuPath + "\\.backup";
             if (!Directory.Exists(cloudPath))
             {
                 Directory.CreateDirectory(cloudPath);
@@ -45,7 +46,6 @@ namespace osu_backup
             var now = DateTime.Now;
             string backupDestination = cloudPath + "\\" + now.ToString("yyyy-MM-dd") + "T" + now.ToString("HH-mm-ss") + "_backup.osb";
             var parts = new List<string>();
-            int step = 1;
             PBAll.Maximum = backupParts.Count + 1;
 
             foreach (var part in backupParts)
@@ -86,7 +86,6 @@ namespace osu_backup
                 {
                     parts.Add(name);
                 }
-                step++;
                 PBAll.PerformStep();
             }
             var info = new Dictionary<string, object>

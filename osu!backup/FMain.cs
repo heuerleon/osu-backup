@@ -66,8 +66,10 @@ namespace osu_backup
             }
         }
 
-        private async void BImport_Click(object sender, EventArgs e)
+        private void BImport_Click(object sender, EventArgs e)
         {
+            var importForm = new FImport(OFDChoose.FileName);
+            importForm.ShowDialog();
         }
 
         private void TPImport_DragEnter(object sender, DragEventArgs e)
@@ -94,100 +96,9 @@ namespace osu_backup
             MessageBox.Show("The backup file has been set to " + importFile);
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void BApply_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private async void BAnalyse_Click(object sender, EventArgs e)
-        {
-            if (importFile == null)
-            {
-                MessageBox.Show("Backup file not specified. You need to select one first to import the data.");
-                return;
-            }
-            string osuPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!";
-            if (!Directory.Exists(osuPath))
-            {
-                MessageBox.Show("osu! installation could not be located. Make sure you have installed osu! correctly.");
-                return;
-            }
-
-            string cloudPath = osuPath + "\\.cloud";
-            if (!Directory.Exists(cloudPath))
-            {
-                Directory.CreateDirectory(cloudPath);
-            }
-            string importPath = cloudPath + "\\temp";
-            if (Directory.Exists(importPath))
-            {
-                Directory.Delete(importPath, true);
-            }
-            Directory.CreateDirectory(importPath);
-
-            ActiveForm.Cursor = Cursors.WaitCursor;
-            TCMain.Enabled = false;
-            await Task.Run(() =>
-            {
-                ZipFile.ExtractToDirectory(importFile, importPath);
-                string infoFile = importPath + "\\backup-info.json";
-                if (!File.Exists(infoFile))
-                {
-                    MessageBox.Show("The specified backup file is invalid.");
-                    return;
-                }
-                var info = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(infoFile));
-                if (info == null)
-                {
-                    MessageBox.Show("The specified backup file is invalid.");
-                    return;
-                }
-                var contains = JsonSerializer.Deserialize<List<string>>((JsonElement)info["contains"]);
-                if (contains == null)
-                {
-                    MessageBox.Show("The specified backup file is invalid.");
-                    return;
-                }
-
-                foreach (var item in contains)
-                {
-                    if (!Enum.TryParse(item, out BackupPart part))
-                    {
-                        continue;
-                    }
-                    switch (part)
-                    {
-                        case BackupPart.Beatmaps:
-                            string beatmapsIn = importPath + "\\Songs";
-                            string beatmapsOut = osuPath + "\\Songs";
-                            //ZipFile.ExtractToDirectory(beatmapsIn, beatmapsOut, true);
-                            break;
-                        case BackupPart.Replays:
-                            string replaysIn = importPath + "\\Replays";
-                            string replaysOut = osuPath + "\\Replays";
-                            //ZipFile.ExtractToDirectory(replaysIn, replaysOut, true);
-                            //FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
-                            break;
-                        case BackupPart.Screenshots:
-                            string screenshotsIn = importPath + "\\Screenshots";
-                            string screenshotsOut = osuPath + "\\Screenshots";
-                            //ZipFile.ExtractToDirectory(screenshotsIn, screenshotsOut, true);
-                            //FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
-                            break;
-                        case BackupPart.Skins:
-                            string skinsIn = importPath + "\\Skins";
-                            string skinsOut = osuPath + "\\Skins";
-                            //ZipFile.ExtractToDirectory(skinsIn, skinsOut, true);
-                            //FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
-                            break;
-                    }
-                }
-            });
-            TCMain.Enabled = true;
-            Cursor = Cursors.Default;
-            SystemSounds.Exclamation.Play();
-            MessageBox.Show("The backup has been imported successfully.",
-                "Your import has finished");
         }
     }
 }
