@@ -11,6 +11,18 @@ namespace osu_backup
         public FMain()
         {
             InitializeComponent();
+            var logoFile = "assets/logo.ico";
+            if (!File.Exists(logoFile))
+            {
+                logoFile = "../../../assets/logo.ico"; // find logo when in debug mode
+            }
+
+            if (File.Exists(logoFile))
+            {
+                using var stream = File.OpenRead(logoFile);
+                Icon = new Icon(stream);
+            }
+
         }
 
         private void BAll_Click(object sender, EventArgs e)
