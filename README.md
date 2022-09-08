@@ -1,6 +1,6 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/heuerleon/osu-backup)
 ![GitHub](https://img.shields.io/github/license/heuerleon/osu-backup)
-# osu-backup
+# osu!backup
 GUI based backupper for the game "osu!". Allows exporting you local player data and importing it conveniently on another machine.
 
 ## 📲 Installing / downloading the tool
