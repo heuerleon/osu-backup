@@ -32,19 +32,19 @@ namespace osu_backup
                 return;
             }
 
-            string cloudPath = osuPath + "\\.backup";
-            if (!Directory.Exists(cloudPath))
-            {
-                Directory.CreateDirectory(cloudPath);
-            }
-            string backupPath = cloudPath + "\\latest-backup";
+            string backupPath = osuPath + "\\.backup";
             if (!Directory.Exists(backupPath))
             {
                 Directory.CreateDirectory(backupPath);
             }
+            string latestBackupPath = backupPath + "\\latest-backup";
+            if (!Directory.Exists(latestBackupPath))
+            {
+                Directory.CreateDirectory(latestBackupPath);
+            }
 
             var now = DateTime.Now;
-            string backupDestination = cloudPath + "\\" + now.ToString("yyyy-MM-dd") + "T" + now.ToString("HH-mm-ss") + "_backup.osb";
+            string backupDestination = backupPath + "\\" + now.ToString("yyyy-MM-dd") + "T" + now.ToString("HH-mm-ss") + "_backup.osb";
             var parts = new List<string>();
             PBAll.Maximum = backupParts.Count + 1;
 
@@ -52,35 +52,24 @@ namespace osu_backup
             {
                 PBStep.Value = 0;
                 LStep.Text = "Exporting " + Enum.GetName(typeof(BackupPart), part);
+
+                string dirIn = osuPath + "\\" + part.ToString();
+                string dirOut = latestBackupPath + "\\" + part.ToString();
+
                 switch (part)
                 {
-                    case BackupPart.Beatmaps:
-                        string beatmapsIn = osuPath + "\\Songs";
-                        string beatmapsOsuFiles = backupPath + "\\Songs";
-                        await FileUtils.CreateOsuMapFiles(beatmapsIn, beatmapsOsuFiles, PBStep);
+                    case BackupPart.Songs:
+                        await FileUtils.CreateOsuMapFiles(dirIn, dirOut, PBStep);
                         break;
                     case BackupPart.Replays:
-                        PBStep.Maximum = 1;
-                        string replaysIn = osuPath + "\\Replays";
-                        string replaysOut = backupPath + "\\Replays";
-                        await Task.Run(() => FileUtils.CopyDirectory(replaysIn, replaysOut, true, true));
-                        PBStep.Value = 1;
-                        break;
                     case BackupPart.Screenshots:
-                        PBStep.Maximum = 1;
-                        string screenshotsIn = osuPath + "\\Screenshots";
-                        string screenshotsOut = backupPath + "\\Screenshots";
-                        await Task.Run(() => FileUtils.CopyDirectory(screenshotsIn, screenshotsOut, true, true));
-                        PBStep.Value = 1;
-                        break;
                     case BackupPart.Skins:
                         PBStep.Maximum = 1;
-                        string skinsIn = osuPath + "\\Skins";
-                        string skinsOut = backupPath + "\\Skins";
-                        await Task.Run(() => FileUtils.CopyDirectory(skinsIn, skinsOut, true, true));
+                        await Task.Run(() => FileUtils.CopyDirectory(dirIn, dirOut, true, true));
                         PBStep.Value = 1;
                         break;
                 }
+
                 string? name = Enum.GetName(typeof(BackupPart), part);
                 if (name != null)
                 {
@@ -94,13 +83,14 @@ namespace osu_backup
                 ["contains"] = parts
             };
 
-            File.WriteAllText(backupPath + "\\backup-info.json", JsonSerializer.Serialize(info));
+            File.WriteAllText(latestBackupPath + "\\backup-info.json", JsonSerializer.Serialize(info));
             LStep.Text = "Compressing backup";
             PBStep.Maximum = 1;
-            await Task.Run(() => ZipFile.CreateFromDirectory(backupPath, backupDestination, CompressionLevel.Fastest, false));
+            PBStep.Value = 0;
+            await Task.Run(() => ZipFile.CreateFromDirectory(latestBackupPath, backupDestination, CompressionLevel.Fastest, false));
             PBStep.Value = 1;
             PBAll.PerformStep();
-            Directory.Delete(backupPath, true);
+            Directory.Delete(latestBackupPath, true);
             TElapsed.Stop();
             TElapsed.Enabled = false;
 

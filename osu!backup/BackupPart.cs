@@ -2,7 +2,7 @@
 {
     public enum BackupPart
     {
-        Beatmaps,
+        Songs,
         Replays,
         Screenshots,
         Skins

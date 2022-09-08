@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.TPImport = new System.Windows.Forms.TabPage();
+            this.LSelectedFilePath = new System.Windows.Forms.Label();
+            this.LSelectedFile = new System.Windows.Forms.Label();
             this.BImport = new System.Windows.Forms.Button();
             this.DGVAnalysis = new System.Windows.Forms.DataGridView();
-            this.CCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CNew = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BApply = new System.Windows.Forms.Button();
             this.LAnalysis = new System.Windows.Forms.Label();
             this.LDragDrop = new System.Windows.Forms.Label();
@@ -46,6 +46,8 @@
             this.CLBSelection = new System.Windows.Forms.CheckedListBox();
             this.TCMain = new System.Windows.Forms.TabControl();
             this.OFDChoose = new System.Windows.Forms.OpenFileDialog();
+            this.CCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CNew = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TPImport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVAnalysis)).BeginInit();
             this.TPExport.SuspendLayout();
@@ -55,6 +57,8 @@
             // TPImport
             // 
             this.TPImport.AllowDrop = true;
+            this.TPImport.Controls.Add(this.LSelectedFilePath);
+            this.TPImport.Controls.Add(this.LSelectedFile);
             this.TPImport.Controls.Add(this.BImport);
             this.TPImport.Controls.Add(this.DGVAnalysis);
             this.TPImport.Controls.Add(this.BApply);
@@ -71,11 +75,31 @@
             this.TPImport.DragDrop += new System.Windows.Forms.DragEventHandler(this.TPImport_DragDrop);
             this.TPImport.DragEnter += new System.Windows.Forms.DragEventHandler(this.TPImport_DragEnter);
             // 
+            // LSelectedFilePath
+            // 
+            this.LSelectedFilePath.AutoSize = true;
+            this.LSelectedFilePath.Location = new System.Drawing.Point(109, 17);
+            this.LSelectedFilePath.Name = "LSelectedFilePath";
+            this.LSelectedFilePath.Size = new System.Drawing.Size(42, 20);
+            this.LSelectedFilePath.TabIndex = 7;
+            this.LSelectedFilePath.Text = "none";
+            // 
+            // LSelectedFile
+            // 
+            this.LSelectedFile.AutoSize = true;
+            this.LSelectedFile.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.LSelectedFile.Location = new System.Drawing.Point(6, 17);
+            this.LSelectedFile.Name = "LSelectedFile";
+            this.LSelectedFile.Size = new System.Drawing.Size(97, 20);
+            this.LSelectedFile.TabIndex = 6;
+            this.LSelectedFile.Text = "Selected file:";
+            // 
             // BImport
             // 
             this.BImport.AutoSize = true;
             this.BImport.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BImport.Location = new System.Drawing.Point(183, 88);
+            this.BImport.Enabled = false;
+            this.BImport.Location = new System.Drawing.Point(6, 53);
             this.BImport.Name = "BImport";
             this.BImport.Size = new System.Drawing.Size(64, 30);
             this.BImport.TabIndex = 5;
@@ -89,7 +113,7 @@
             this.DGVAnalysis.AllowUserToDeleteRows = false;
             this.DGVAnalysis.AllowUserToResizeColumns = false;
             this.DGVAnalysis.AllowUserToResizeRows = false;
-            this.DGVAnalysis.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.DGVAnalysis.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.DGVAnalysis.BackgroundColor = System.Drawing.Color.White;
             this.DGVAnalysis.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DGVAnalysis.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -97,7 +121,7 @@
             this.CCategory,
             this.CNew});
             this.DGVAnalysis.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.DGVAnalysis.Location = new System.Drawing.Point(6, 133);
+            this.DGVAnalysis.Location = new System.Drawing.Point(6, 167);
             this.DGVAnalysis.MultiSelect = false;
             this.DGVAnalysis.Name = "DGVAnalysis";
             this.DGVAnalysis.ReadOnly = true;
@@ -105,33 +129,14 @@
             this.DGVAnalysis.RowTemplate.Height = 25;
             this.DGVAnalysis.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DGVAnalysis.ShowEditingIcon = false;
-            this.DGVAnalysis.Size = new System.Drawing.Size(241, 275);
+            this.DGVAnalysis.Size = new System.Drawing.Size(748, 208);
             this.DGVAnalysis.TabIndex = 4;
-            // 
-            // CCategory
-            // 
-            this.CCategory.Frozen = true;
-            this.CCategory.HeaderText = "Category";
-            this.CCategory.Name = "CCategory";
-            this.CCategory.ReadOnly = true;
-            this.CCategory.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CCategory.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CCategory.Width = 75;
-            // 
-            // CNew
-            // 
-            this.CNew.Frozen = true;
-            this.CNew.HeaderText = "New asset count";
-            this.CNew.Name = "CNew";
-            this.CNew.ReadOnly = true;
-            this.CNew.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CNew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.CNew.Width = 123;
             // 
             // BApply
             // 
             this.BApply.AutoSize = true;
             this.BApply.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BApply.Enabled = false;
             this.BApply.Location = new System.Drawing.Point(6, 429);
             this.BApply.Name = "BApply";
             this.BApply.Size = new System.Drawing.Size(110, 30);
@@ -144,7 +149,7 @@
             // 
             this.LAnalysis.AutoSize = true;
             this.LAnalysis.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.LAnalysis.Location = new System.Drawing.Point(6, 85);
+            this.LAnalysis.Location = new System.Drawing.Point(6, 134);
             this.LAnalysis.Name = "LAnalysis";
             this.LAnalysis.Size = new System.Drawing.Size(171, 30);
             this.LAnalysis.TabIndex = 2;
@@ -154,17 +159,17 @@
             // 
             this.LDragDrop.AutoSize = true;
             this.LDragDrop.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.LDragDrop.Location = new System.Drawing.Point(107, 21);
+            this.LDragDrop.Location = new System.Drawing.Point(177, 58);
             this.LDragDrop.Name = "LDragDrop";
-            this.LDragDrop.Size = new System.Drawing.Size(262, 20);
+            this.LDragDrop.Size = new System.Drawing.Size(253, 20);
             this.LDragDrop.TabIndex = 1;
-            this.LDragDrop.Text = "...or drag and drop a backup file (.osb)";
+            this.LDragDrop.Text = "or drag and drop a backup file (.osb)";
             // 
             // BChoose
             // 
             this.BChoose.AutoSize = true;
             this.BChoose.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BChoose.Location = new System.Drawing.Point(6, 16);
+            this.BChoose.Location = new System.Drawing.Point(76, 53);
             this.BChoose.Name = "BChoose";
             this.BChoose.Size = new System.Drawing.Size(95, 30);
             this.BChoose.TabIndex = 0;
@@ -269,6 +274,26 @@
             // 
             this.OFDChoose.FileName = "openFileDialog1";
             // 
+            // CCategory
+            // 
+            this.CCategory.Frozen = true;
+            this.CCategory.HeaderText = "Category";
+            this.CCategory.Name = "CCategory";
+            this.CCategory.ReadOnly = true;
+            this.CCategory.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CCategory.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CCategory.Width = 75;
+            // 
+            // CNew
+            // 
+            this.CNew.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.CNew.HeaderText = "How many are new?";
+            this.CNew.Name = "CNew";
+            this.CNew.ReadOnly = true;
+            this.CNew.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.CNew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CNew.Width = 104;
+            // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -311,6 +336,8 @@
         private Label LAnalysis;
         private DataGridView DGVAnalysis;
         private Button BImport;
+        private Label LSelectedFile;
+        private Label LSelectedFilePath;
         private DataGridViewTextBoxColumn CCategory;
         private DataGridViewTextBoxColumn CNew;
     }

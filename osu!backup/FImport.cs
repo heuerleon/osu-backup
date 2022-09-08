@@ -34,18 +34,18 @@ namespace osu_backup
                 return;
             }
 
-            if (this.importFile == null)
+            if (importFile == null)
             {
                 MessageBox.Show("Backup file not specified. You need to select one first to import the data.");
                 return;
             }
 
-            string cloudPath = osuPath + "\\.backup";
-            if (!Directory.Exists(cloudPath))
+            string backupPath = osuPath + "\\.backup";
+            if (!Directory.Exists(backupPath))
             {
-                Directory.CreateDirectory(cloudPath);
+                Directory.CreateDirectory(backupPath);
             }
-            string importPath = cloudPath + "\\temp";
+            string importPath = backupPath + "\\temp";
             if (Directory.Exists(importPath))
             {
                 Directory.Delete(importPath, true);
@@ -91,69 +91,37 @@ namespace osu_backup
                 LStep.Text = "Importing " + Enum.GetName(typeof(BackupPart), part);
                 List<string> newAssets = new();
 
+                string dirIn = importPath + "\\" + item;
+                string dirOut = osuPath + "\\" + item;
+
                 switch (part)
                 {
-                    case BackupPart.Beatmaps:
+                    case BackupPart.Songs:
                         PBStep.Maximum = 1;
-                        string beatmapsIn = importPath + "\\Songs";
-                        string beatmapsOut = osuPath + "\\Songs";
-                        var beatmaps = new DirectoryInfo(beatmapsIn).GetFiles();
-                        foreach (FileInfo beatmap in beatmaps)
+                        var songs = new DirectoryInfo(dirIn).GetFiles();
+                        foreach (FileInfo song in songs)
                         {
-                            var oldFile = new DirectoryInfo(beatmapsOut + "\\" + beatmap.Name[..^4]);
+                            var oldFile = new DirectoryInfo(dirOut + "\\" + song.Name[..^4]);
                             if (!oldFile.Exists)
                             {
-                                newAssets.Add(beatmap.FullName);
+                                newAssets.Add(song.FullName);
                             }
                         }
                         PBStep.Value = 1;
                         break;
                     case BackupPart.Replays:
-                        PBStep.Maximum = 1;
-                        string replaysIn = importPath + "\\Replays";
-                        string replaysOut = osuPath + "\\Replays";
-                        var replays = new DirectoryInfo(replaysIn).GetFiles();
-                        foreach (FileInfo replay in replays)
-                        {
-                            var oldFile = new FileInfo(replaysOut + "\\" + replay.Name);
-                            if (!oldFile.Exists)
-                            {
-                                newAssets.Add(replay.FullName);
-                            }
-                        }
-                        //FileUtils.CopyDirectory(replaysOut, osuPath + "\\Replays", true, false);
-                        PBStep.Value = 1;
-                        break;
                     case BackupPart.Screenshots:
-                        PBStep.Maximum = 1;
-                        string screenshotsIn = importPath + "\\Screenshots";
-                        string screenshotsOut = osuPath + "\\Screenshots";
-                        var screenshots = new DirectoryInfo(screenshotsIn).GetFiles();
-                        foreach (FileInfo screenshot in screenshots)
-                        {
-                            var oldFile = new FileInfo(screenshotsOut + "\\" + screenshot.Name);
-                            if (!oldFile.Exists)
-                            {
-                                newAssets.Add(screenshot.FullName);
-                            }
-                        }
-                        //FileUtils.CopyDirectory(screenshotsOut, osuPath + "\\Screenshots", true, false);
-                        PBStep.Value = 1;
-                        break;
                     case BackupPart.Skins:
                         PBStep.Maximum = 1;
-                        string skinsIn = importPath + "\\Skins";
-                        string skinsOut = osuPath + "\\Skins";
-                        var skins = new DirectoryInfo(skinsIn).GetFiles();
-                        foreach (FileInfo skin in skins)
+                        var files = new DirectoryInfo(dirIn).GetFiles();
+                        foreach (FileInfo file in files)
                         {
-                            var oldFile = new FileInfo(skinsOut + "\\" + skin.Name);
+                            var oldFile = new FileInfo(dirOut + "\\" + file.Name);
                             if (!oldFile.Exists)
                             {
-                                newAssets.Add(skin.FullName);
+                                newAssets.Add(file.FullName);
                             }
                         }
-                        //FileUtils.CopyDirectory(skinsOut, osuPath + "\\Skins", true, false);
                         PBStep.Value = 1;
                         break;
                 }
@@ -165,7 +133,10 @@ namespace osu_backup
             MessageBox.Show("The backup has been imported successfully. You can now view the new assets and apply them.",
                 "Your import has finished");
             mainRef.UpdateAnalysis(summary);
+            mainRef.Imported = true;
             Close();
         }
+
+
     }
 }
