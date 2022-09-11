@@ -43,16 +43,16 @@
             this.LStep.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.LStep.Location = new System.Drawing.Point(12, 9);
             this.LStep.Name = "LStep";
-            this.LStep.Size = new System.Drawing.Size(40, 20);
+            this.LStep.Size = new System.Drawing.Size(61, 31);
             this.LStep.TabIndex = 0;
             this.LStep.Text = "Step";
             // 
             // PBStep
             // 
-            this.PBStep.Location = new System.Drawing.Point(12, 32);
+            this.PBStep.Location = new System.Drawing.Point(12, 43);
             this.PBStep.Maximum = 1;
             this.PBStep.Name = "PBStep";
-            this.PBStep.Size = new System.Drawing.Size(269, 22);
+            this.PBStep.Size = new System.Drawing.Size(297, 22);
             this.PBStep.Step = 1;
             this.PBStep.TabIndex = 1;
             // 
@@ -61,25 +61,25 @@
             this.LProgress.AutoSize = true;
             this.LProgress.Location = new System.Drawing.Point(12, 79);
             this.LProgress.Name = "LProgress";
-            this.LProgress.Size = new System.Drawing.Size(116, 20);
+            this.LProgress.Size = new System.Drawing.Size(180, 31);
             this.LProgress.TabIndex = 2;
             this.LProgress.Text = "Overall Progress";
             // 
             // PBAll
             // 
-            this.PBAll.Location = new System.Drawing.Point(12, 102);
+            this.PBAll.Location = new System.Drawing.Point(12, 113);
             this.PBAll.Maximum = 1;
             this.PBAll.Name = "PBAll";
-            this.PBAll.Size = new System.Drawing.Size(269, 22);
+            this.PBAll.Size = new System.Drawing.Size(297, 22);
             this.PBAll.Step = 1;
             this.PBAll.TabIndex = 3;
             // 
             // LElapsed
             // 
             this.LElapsed.AutoSize = true;
-            this.LElapsed.Location = new System.Drawing.Point(12, 150);
+            this.LElapsed.Location = new System.Drawing.Point(12, 176);
             this.LElapsed.Name = "LElapsed";
-            this.LElapsed.Size = new System.Drawing.Size(101, 20);
+            this.LElapsed.Size = new System.Drawing.Size(155, 31);
             this.LElapsed.TabIndex = 4;
             this.LElapsed.Text = "Time elapsed:";
             // 
@@ -89,9 +89,9 @@
             // 
             // FExport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 190);
+            this.ClientSize = new System.Drawing.Size(321, 216);
             this.ControlBox = false;
             this.Controls.Add(this.LElapsed);
             this.Controls.Add(this.PBAll);

@@ -18,6 +18,12 @@
     <Compile Update="FImport.cs">
       <SubType>Form</SubType>
     </Compile>
+	<Compile Update="FExport.cs">
+		<SubType>Form</SubType>
+	</Compile>
+	<Compile Update="FMain.cs">
+		<SubType>Form</SubType>
+	</Compile>
   </ItemGroup>
 
 </Project>
