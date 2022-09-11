@@ -30,47 +30,44 @@ namespace osu_backup
 
         private void BAll_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < CLBSelection.Items.Count; i++)
-            {
-                CLBSelection.SetItemChecked(i, true);
-            }
+            CBSongs.Checked = true;
+            CBReplays.Checked = true;
+            CBScreenshots.Checked = true;
+            CBSkins.Checked = true;
         }
 
         private void BNone_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < CLBSelection.Items.Count; i++)
-            {
-                CLBSelection.SetItemChecked(i, false);
-            }
+            CBSongs.Checked = false;
+            CBReplays.Checked = false;
+            CBScreenshots.Checked = false;
+            CBSkins.Checked = false;
         }
 
         private void BExport_Click(object sender, EventArgs e)
         {
-
             var parts = new List<BackupPart>();
-            foreach (var index in CLBSelection.CheckedIndices)
+            string osuPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!";
+
+            if (CBSongs.Checked && Directory.Exists(osuPath + "\\Songs"))
             {
-                if (!Enum.IsDefined(typeof(BackupPart), index))
-                {
-                    continue;
-                }
-                var part = (BackupPart)index;
-                parts.Add(part);
+                parts.Add(BackupPart.Songs);
             }
+            if (CBReplays.Checked && Directory.Exists(osuPath + "\\Replays"))
+            {
+                parts.Add(BackupPart.Replays);
+            }
+            if (CBScreenshots.Checked && Directory.Exists(osuPath + "\\Screenshots"))
+            {
+                parts.Add(BackupPart.Screenshots);
+            }
+            if (CBSkins.Checked && Directory.Exists(osuPath + "\\Skins"))
+            {
+                parts.Add(BackupPart.Skins);
+            }
+
             var exportForm = new FExport(parts);
             exportForm.ShowDialog();
-        }
-
-        private void FMain_Load(object sender, EventArgs e)
-        {
-            foreach (var part in Enum.GetValues(typeof(BackupPart)))
-            {
-                string? name = Enum.GetName(typeof(BackupPart), part);
-                if (name != null)
-                {
-                    CLBSelection.Items.Add(name);
-                }
-            }
         }
 
         private void BChoose_Click(object sender, EventArgs e)
