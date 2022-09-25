@@ -12,7 +12,7 @@ GUI based backupper for the game "osu!". Allows exporting you local player data 
 
 ### Creating a backup
 
-Under the tab "Export", select what parts of your personal osu! files you want to back up. Then click "Export" and wait until it says that it has finished. Your backup will then be ready under the path specified in the popup dialogue.
+Under the tab "Export", select what parts of your personal osu files you want to back up. Then click "Export" and wait until it says that it has finished. Your backup will then be ready under the path shown in the popup dialogue.
 
 This file can now be transferred to any storage device or cloud storage.
 
@@ -20,4 +20,4 @@ This file can now be transferred to any storage device or cloud storage.
 
 Under the tab "Import", choose the backup file or drag-and-drop it. Then click on "Import". The program will now unpack all the files and scan which of them are not installed on the new device.
 
-Now you can click on "Apply backup" and all your files will be available/usable in osu!.
+Now you can click on "Apply backup" and all your files will be available in osu!.
